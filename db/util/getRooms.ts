@@ -1,16 +1,30 @@
 import { client } from "../client";
 import { DbConst } from "../../constants/DbConst";
-export async function getRooms() {
-  let r;
+import { RoomDocument } from "../../type/Room";
+import { logRoomDocuments } from "../log/logRoomDocuments";
+
+interface getRoomsOption {
+  logging?: boolean;
+}
+
+export async function getRooms(options?: getRoomsOption) {
+  let r: RoomDocument[];
   try {
     await client.connect();
     const collection = client.db(DbConst.DB).collection(DbConst.ROOMS);
     const rooms = await collection.find().project({}).sort({}).toArray();
-    r = rooms;
+    r = rooms as RoomDocument[];
   } catch (error) {
+    console.warn(
+      "Cannot connected to db or cannot execute db transactions. See details from the error message below."
+    );
     console.error(error);
+    r = [];
   } finally {
     await client.close();
+  }
+  if (options?.logging) {
+    logRoomDocuments(r);
   }
   return r;
 }
