@@ -1,6 +1,12 @@
 export const DbConst = {
-  DB: "chatdb",
-  ROOMS: "rooms",
-  CHATHISTORY: "chat_history",
-  USERS: "users",
+  META: {
+    name: "chatdb",
+    collections: {
+      ROOMS: "rooms",
+      USERS: "users",
+    },
+  },
+  HISTORY: {
+    name: "chat_history",
+  },
 };
