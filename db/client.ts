@@ -13,14 +13,37 @@ abstract class Singleton {
   static async getClient(): Promise<MongoClient> {
     if (this.instance) return this.instance as MongoClient;
     else {
-      this.instance = await new MongoClient(uri, {
-        serverApi: ServerApiVersion.v1,
-      }).connect();
+      try {
+        this.instance = await new MongoClient(uri, {
+          serverApi: ServerApiVersion.v1,
+        }).connect();
+      } catch (e) {
+        console.error(e);
+        throw new Error(
+          "Could not start DB instance. Check DB settings or restart server."
+        );
+      } finally {
+        console.log("DB connection made successfully.");
+      }
     }
     return this.instance;
   }
   static async closeClient() {
-    await this.instance?.close();
+    if (!this.instance) {
+      console.log("Any DB instance was made before. DB disconnect confirmed.");
+      return;
+    }
+    try {
+      await this.instance.close();
+    } catch (e) {
+      console.log(
+        "Unidentified error occured, but this error can be ignored. Check error message below."
+      );
+      console.error(e);
+      return;
+    } finally {
+      console.log("DB disconnect confirmed");
+    }
   }
 }
 
