@@ -5,6 +5,11 @@ const uri = `mongodb+srv://${process.env.DB_ID}:${process.env.DB_PASSWORD}@clust
 // Singleton design for db connection instance
 abstract class Singleton {
   private static instance: MongoClient | undefined;
+  constructor() {
+    throw new Error(
+      "You cannot add instance of singleton object, do not try to extend or implements this abstract class."
+    );
+  }
   static async getClient(): Promise<MongoClient> {
     if (this.instance) return this.instance as MongoClient;
     else {
