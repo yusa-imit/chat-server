@@ -1,1 +1,3 @@
-import { Worker } from "worker_threads";
+import { isMainThread, Worker } from "worker_threads";
+
+class RoomManager {}
