@@ -20,15 +20,16 @@ export async function addTestChatHistory(
   roomId: string,
   chatData: Chat[] = chatHistoryData
 ) {
+  let partialClient;
   try {
-    await client.connect();
-    await client
+    partialClient = await client.connect();
+    await partialClient
       .db(DbConst.HISTORY.name)
       .collection(roomId)
       .insertMany(chatData);
   } catch (e) {
     console.log(e);
   } finally {
-    await client.close();
+    if (partialClient) await partialClient.close();
   }
 }

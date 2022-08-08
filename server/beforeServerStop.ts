@@ -1,9 +1,9 @@
-import { client } from "../db/client";
+import { client, closeConnection } from "../db/client";
 
 export async function beforeServerStop() {
   // verify db client disconnected
   try {
-    await client.close();
+    await closeConnection();
   } finally {
     console.log("DB disconnect confirmed");
   }

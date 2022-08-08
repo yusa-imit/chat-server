@@ -2,6 +2,7 @@ import { DbConst } from "../../../constants/DbConst";
 import { RoomDocument } from "../../../type/Room";
 import { client } from "../../client";
 import { logRoomDocuments } from "../../log/logRoomDocuments";
+import { MongoClient } from "mongodb";
 
 interface getRoomsOption {
   logging?: boolean;
@@ -10,7 +11,6 @@ interface getRoomsOption {
 export async function getRooms(options?: getRoomsOption) {
   let r: RoomDocument[];
   try {
-    await client.connect();
     const collection = client
       .db(DbConst.META.name)
       .collection(DbConst.META.collections.ROOMS);
@@ -22,8 +22,6 @@ export async function getRooms(options?: getRoomsOption) {
     );
     console.error(error);
     r = [];
-  } finally {
-    await client.close();
   }
   if (options?.logging) {
     logRoomDocuments(r);

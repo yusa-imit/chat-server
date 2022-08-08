@@ -17,7 +17,6 @@ export async function getChatHistory(
 ) {
   let r: ChatDocument[];
   try {
-    await client.connect();
     const collection = client.db(DbConst.HISTORY.name).collection(roomId);
     const rooms = await collection.find().project({}).sort({}).toArray();
     r = rooms as ChatDocument[];
@@ -27,8 +26,6 @@ export async function getChatHistory(
     );
     console.error(error);
     r = [];
-  } finally {
-    await client.close();
   }
   if (options?.logging) {
     logChatHistories(r);
